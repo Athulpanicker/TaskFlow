@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+{{ project.name }} - TaskFlow
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            {{ project.name }}
+        </h1>
+
+        <p>
+            Project Details
+        </p>
+
+    </div>
+
+
+    <div>
+
+        <a
+            href="{% url 'project_update' project.id %}"
+            class="btn-primary"
+        >
+            Edit Project
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="project-detail-card">
+
+    <h2>
+        Description
+    </h2>
+
+    <p>
+        {% if project.description %}
+            {{ project.description }}
+        {% else %}
+            No description provided.
+        {% endif %}
+    </p>
+
+
+    <hr>
+
+
+    <p>
+        <strong>Created:</strong>
+
+        {{ project.created_at|date:"d M Y, H:i" }}
+    </p>
+
+
+    <div class="project-actions">
+
+        <a href="{% url 'task_list' project.id %}" class="btn-primary">
+           View Tasks
+        </a>
+
+        <a
+            href="{% url 'project_list' %}"
+        >
+            ← Back to Projects
+        </a>
+
+
+        <a
+            href="{% url 'project_update' project.id %}"
+        >
+            Edit
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+{{ project.name }} - Tasks
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            {{ project.name }}
+        </h1>
+
+        <p>
+            Tasks
+        </p>
+
+    </div>
+
+
+    <a
+        href="{% url 'task_create' project.id %}"
+        class="btn-primary"
+    >
+        + New Task
+    </a>
+
+</div>
+<div class="task-filter">
+
+    <form method="GET">
+
+        <div class="filter-row">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Search tasks..."
+                value="{{ search }}"
+            >
+
+
+            <select name="status">
+
+                <option value="">
+                    All Statuses
+                </option>
+
+                <option
+                    value="todo"
+                    {% if selected_status == "todo" %}
+                        selected
+                    {% endif %}
+                >
+                    To Do
+                </option>
+
+                <option
+                    value="progress"
+                    {% if selected_status == "progress" %}
+                        selected
+                    {% endif %}
+                >
+                    In Progress
+                </option>
+
+                <option
+                    value="completed"
+                    {% if selected_status == "completed" %}
+                        selected
+                    {% endif %}
+                >
+                    Completed
+                </option>
+
+            </select>
+
+
+            <select name="priority">
+
+                <option value="">
+                    All Priorities
+                </option>
+
+                <option
+                    value="low"
+                    {% if selected_priority == "low" %}
+                        selected
+                    {% endif %}
+                >
+                    Low
+                </option>
+
+                <option
+                    value="medium"
+                    {% if selected_priority == "medium" %}
+                        selected
+                    {% endif %}
+                >
+                    Medium
+                </option>
+
+                <option
+                    value="high"
+                    {% if selected_priority == "high" %}
+                        selected
+                    {% endif %}
+                >
+                    High
+                </option>
+
+            </select>
+
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                Search
+            </button>
+
+
+            <a
+                href="{% url 'task_list' project.id %}"
+                class="btn-secondary"
+            >
+                Clear
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% if tasks %}
+
+    <div class="task-list">
+
+        {% for task in tasks %}
+
+            <div class="task-card">
+
+                <div>
+
+                    <h2>
+                        {{ task.title }}
+                    </h2>
+
+                    <p>
+                        {{ task.description }}
+                    </p>
+
+                </div>
+
+
+<div class="task-meta">
+
+    <span class="priority-badge priority-{{ task.priority }}">
+        {{ task.get_priority_display }}
+    </span>
+
+
+    <span class="status-badge status-{{ task.status }}">
+        {{ task.get_status_display }}
+    </span>
+
+
+    {% if task.due_date %}
+
+        <span class="due-date">
+
+            Due:
+            {{ task.due_date|date:"d M Y" }}
+
+        </span>
+
+    {% endif %}
+
+
+    <div class="task-actions">
+
+        <a
+            href="{% url 'task_update' project.id task.id %}"
+            class="task-edit"
+        >
+            Edit
+        </a>
+
+
+        <a
+    href="{% url 'task_delete' project.id task.id %}"
+    class="task-delete delete-task-btn"
+    data-task-title="{{ task.title }}"
+>
+    Delete
+</a>
+
+    </div>
+
+</div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <div class="empty-state">
+
+        <h2>
+            No tasks yet
+        </h2>
+
+        <p>
+            Create your first task for this project.
+        </p>
+
+        <a
+            href="{% url 'task_create' project.id %}"
+            class="btn-primary"
+        >
+            Create Task
+        </a>
+
+    </div>
+
+{% endif %}
+
+{% endblock %}
